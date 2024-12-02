@@ -43,6 +43,11 @@
           runtimeInputs = [ (pkgs.dyalog.override { acceptLicense = true; }) getInput ];
           text = "getInput 1 | dyalog -script ${./day1.apl} 2> /dev/null";
         };
+        day2 = pkgs.writeShellApplication {
+          name = "day2";
+          runtimeInputs = [ pkgs.bash getInput ];
+          text = "getInput 2 | bash ${./day2.bash}";
+        };
       };
     };
 }
