@@ -48,6 +48,11 @@
           runtimeInputs = [ pkgs.bash getInput ];
           text = "getInput 2 | bash ${./day2.bash}";
         };
+        day3 = pkgs.writeShellApplication {
+          name = "day3";
+          runtimeInputs = [ getInput (pkgs.writeCBin "day3Bin" (builtins.readFile ./day3.c)) ];
+          text = "getInput 3 | day3Bin";
+        };
       };
     };
 }
