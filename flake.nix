@@ -53,6 +53,11 @@
           runtimeInputs = [ getInput (pkgs.writeCBin "day3Bin" (builtins.readFile ./day3.c)) ];
           text = "getInput 3 | day3Bin";
         };
+        day4 = pkgs.writeShellApplication {
+          name = "day4";
+          runtimeInputs = [ pkgs.dart getInput ];
+          text = "getInput 4 | dart run ${./day4.dart}";
+        };
       };
     };
 }
