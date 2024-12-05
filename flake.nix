@@ -58,6 +58,11 @@
           runtimeInputs = [ pkgs.dart getInput ];
           text = "getInput 4 | dart run ${./day4.dart}";
         };
+        day5 = pkgs.writeShellApplication {
+          name = "day5";
+          runtimeInputs = [ pkgs.elixir getInput ];
+          text = "getInput 5 | elixir ${./day5.exs}";
+        };
       };
     };
 }
