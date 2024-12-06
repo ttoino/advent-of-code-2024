@@ -63,6 +63,19 @@
           runtimeInputs = [ pkgs.elixir getInput ];
           text = "getInput 5 | elixir ${./day5.exs}";
         };
+        day6 = pkgs.writeShellApplication {
+          name = "day6";
+          runtimeInputs = [ getInput (
+            pkgs.runCommand "day6Bin" {
+                nativeBuildInputs = [ pkgs.gfortran ];
+            } ''
+              n="$out/bin/day6Bin"
+              mkdir -p $(dirname $n)
+              gfortran -fimplicit-none -fcheck=all -ffree-line-length-512 ${./day6.f90} -o "$n"
+            ''
+          ) ];
+          text = "getInput 6 | day6Bin";
+        };
       };
     };
 }
