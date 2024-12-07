@@ -40,12 +40,12 @@
       packages.${system} = {
         day1 = pkgs.writeShellApplication {
           name = "day1";
-          runtimeInputs = [ (pkgs.dyalog.override { acceptLicense = true; }) getInput ];
+          runtimeInputs = [ getInput (pkgs.dyalog.override { acceptLicense = true; }) ];
           text = "getInput 1 | dyalog -script ${./day1.apl} 2> /dev/null";
         };
         day2 = pkgs.writeShellApplication {
           name = "day2";
-          runtimeInputs = [ pkgs.bash getInput ];
+          runtimeInputs = [ getInput pkgs.bash ];
           text = "getInput 2 | bash ${./day2.bash}";
         };
         day3 = pkgs.writeShellApplication {
@@ -55,12 +55,12 @@
         };
         day4 = pkgs.writeShellApplication {
           name = "day4";
-          runtimeInputs = [ pkgs.dart getInput ];
+          runtimeInputs = [ getInput pkgs.dart ];
           text = "getInput 4 | dart run ${./day4.dart}";
         };
         day5 = pkgs.writeShellApplication {
           name = "day5";
-          runtimeInputs = [ pkgs.elixir getInput ];
+          runtimeInputs = [ getInput pkgs.elixir ];
           text = "getInput 5 | elixir ${./day5.exs}";
         };
         day6 = pkgs.writeShellApplication {
@@ -75,6 +75,11 @@
             ''
           ) ];
           text = "getInput 6 | day6Bin";
+        };
+        day7 = pkgs.writeShellApplication {
+          name = "day7";
+          runtimeInputs = [ getInput pkgs.go ];
+          text = "getInput 7 | go run ${./day7.go}";
         };
       };
     };
