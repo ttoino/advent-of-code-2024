@@ -81,6 +81,11 @@
           runtimeInputs = [ getInput pkgs.go ];
           text = "getInput 7 | go run ${./day7.go}";
         };
+        day8 = pkgs.writeShellApplication {
+          name = "day8";
+          runtimeInputs = [ pkgs.ghc getInput ];
+          text = "getInput 8 | runghc ${./day8.hs}";
+        };
       };
     };
 }
