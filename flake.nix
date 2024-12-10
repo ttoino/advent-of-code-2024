@@ -86,6 +86,11 @@
           runtimeInputs = [ pkgs.ghc getInput ];
           text = "getInput 8 | runghc ${./day8.hs}";
         };
+        day9 = pkgs.writeShellApplication {
+          name = "day9";
+          runtimeInputs = [ pkgs.idris2 getInput ];
+          text = "getInput 9 | idris2 -x elba --source-dir / ${./day9.idr}";
+        };
       };
     };
 }
