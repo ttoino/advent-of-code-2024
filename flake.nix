@@ -91,6 +91,11 @@
           runtimeInputs = [ pkgs.idris2 getInput ];
           text = "getInput 9 | idris2 -x elba --source-dir / ${./day9.idr}";
         };
+        day10 = pkgs.writeShellApplication {
+          name = "day10";
+          runtimeInputs = [ pkgs.julia getInput ];
+          text = "getInput 10 | julia ${./day10.jl}";
+        };
       };
     };
 }
