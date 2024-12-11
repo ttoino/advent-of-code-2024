@@ -99,7 +99,7 @@
         day11 = pkgs.writeShellApplication {
           name = "day11";
           runtimeInputs = [ pkgs.kotlin getInput ];
-          text = "getInput 11 | JAVA_OPTS='-Xmx4g' kotlinc -script ${./day11.main.kts}";
+          text = "getInput 11 | kotlinc -script ${./day11.kts}";
         };
       };
     };
