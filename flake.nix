@@ -38,58 +38,58 @@
     in
     {
       packages.${system} = {
-        day1 = pkgs.writeShellApplication {
-          name = "day1";
+        day01 = pkgs.writeShellApplication {
+          name = "day01";
           runtimeInputs = [ getInput (pkgs.dyalog.override { acceptLicense = true; }) ];
-          text = "getInput 1 | dyalog -script ${./day1.apl} 2> /dev/null";
+          text = "getInput 1 | dyalog -script ${./day01.apl} 2> /dev/null";
         };
-        day2 = pkgs.writeShellApplication {
-          name = "day2";
+        day02 = pkgs.writeShellApplication {
+          name = "day02";
           runtimeInputs = [ getInput pkgs.bash ];
-          text = "getInput 2 | bash ${./day2.bash}";
+          text = "getInput 2 | bash ${./day02.bash}";
         };
-        day3 = pkgs.writeShellApplication {
-          name = "day3";
-          runtimeInputs = [ getInput (pkgs.writeCBin "day3Bin" (builtins.readFile ./day3.c)) ];
-          text = "getInput 3 | day3Bin";
+        day03 = pkgs.writeShellApplication {
+          name = "day03";
+          runtimeInputs = [ getInput (pkgs.writeCBin "day03Bin" (builtins.readFile ./day03.c)) ];
+          text = "getInput 3 | day03Bin";
         };
-        day4 = pkgs.writeShellApplication {
-          name = "day4";
+        day04 = pkgs.writeShellApplication {
+          name = "day04";
           runtimeInputs = [ getInput pkgs.dart ];
-          text = "getInput 4 | dart run ${./day4.dart}";
+          text = "getInput 4 | dart run ${./day04.dart}";
         };
-        day5 = pkgs.writeShellApplication {
-          name = "day5";
+        day05 = pkgs.writeShellApplication {
+          name = "day05";
           runtimeInputs = [ getInput pkgs.elixir ];
-          text = "getInput 5 | elixir ${./day5.exs}";
+          text = "getInput 5 | elixir ${./day05.exs}";
         };
-        day6 = pkgs.writeShellApplication {
-          name = "day6";
+        day06 = pkgs.writeShellApplication {
+          name = "day06";
           runtimeInputs = [ getInput (
-            pkgs.runCommand "day6Bin" {
+            pkgs.runCommand "day06Bin" {
                 nativeBuildInputs = [ pkgs.gfortran ];
             } ''
-              n="$out/bin/day6Bin"
+              n="$out/bin/day06Bin"
               mkdir -p $(dirname $n)
-              gfortran -fimplicit-none -fcheck=all -ffree-line-length-512 ${./day6.f90} -o "$n"
+              gfortran -fimplicit-none -fcheck=all -ffree-line-length-512 ${./day06.f90} -o "$n"
             ''
           ) ];
-          text = "getInput 6 | day6Bin";
+          text = "getInput 6 | day06Bin";
         };
-        day7 = pkgs.writeShellApplication {
-          name = "day7";
+        day07 = pkgs.writeShellApplication {
+          name = "day07";
           runtimeInputs = [ getInput pkgs.go ];
-          text = "getInput 7 | go run ${./day7.go}";
+          text = "getInput 7 | go run ${./day07.go}";
         };
-        day8 = pkgs.writeShellApplication {
-          name = "day8";
+        day08 = pkgs.writeShellApplication {
+          name = "day08";
           runtimeInputs = [ pkgs.ghc getInput ];
-          text = "getInput 8 | runghc ${./day8.hs}";
+          text = "getInput 8 | runghc ${./day08.hs}";
         };
-        day9 = pkgs.writeShellApplication {
-          name = "day9";
+        day09 = pkgs.writeShellApplication {
+          name = "day09";
           runtimeInputs = [ pkgs.idris2 getInput ];
-          text = "getInput 9 | idris2 -x elba --source-dir / ${./day9.idr}";
+          text = "getInput 9 | idris2 -x elba --source-dir / ${./day09.idr}";
         };
         day10 = pkgs.writeShellApplication {
           name = "day10";
