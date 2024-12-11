@@ -1,7 +1,7 @@
-// @file:Repository("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 @file:DependsOn("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
 import java.math.BigInteger
+import java.util.SortedMap
 import kotlin.coroutines.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -24,17 +24,22 @@ fun <T, R> Flow<T>.parallelMap(
 
 suspend fun blink(n: Int, stones: Flow<BigInteger>): Long = stones.parallelMap { blinkEl(n, it)}.reduce(Long::plus)
 
+val cache = mutableMapOf<Pair<Int, BigInteger>, Long>()
+val bi2024 = 2024.toBigInteger()
+
 suspend fun blinkEl(n: Int, stone: BigInteger): Long {
-    print(n)
-    print(" ")
     if (n == 0) return 1
-    if (stone == BigInteger.ZERO) 
-        if (n >= 4) return blink(n-4, flowOf(2, 0, 2, 4).map(Int::toBigInteger))
-        else return blinkEl(n-1, BigInteger.ONE)
+
+    cache[n to stone]?.let { return it }
+
     val s = stone.toString()
-    if (s.length.rem(2) == 0)
-        return blink(n-1, s.chunked(s.length.div(2)).map(String::toBigInteger).asFlow())
-    return blinkEl(n-1, stone * 2024.toBigInteger())
+    val result = if (stone == BigInteger.ZERO) blinkEl(n-1, BigInteger.ONE)
+        else if (s.length.rem(2) == 0)
+            blink(n-1, s.chunked(s.length.div(2)).map(String::toBigInteger).asFlow())
+        else blinkEl(n-1, stone * bi2024)
+
+    cache[n to stone] = result
+    return result
 }
 
 fun part1(input: List<BigInteger>) = runBlocking(Dispatchers.IO) { blink(25, input.asFlow()) }
