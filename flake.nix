@@ -96,6 +96,11 @@
           runtimeInputs = [ pkgs.julia getInput ];
           text = "getInput 10 | julia ${./day10.jl}";
         };
+        day11 = pkgs.writeShellApplication {
+          name = "day11";
+          runtimeInputs = [ pkgs.kotlin getInput ];
+          text = "getInput 11 | kotlinc -script ${./day11.kts}";
+        };
       };
     };
 }
