@@ -101,6 +101,11 @@
           runtimeInputs = [ pkgs.kotlin getInput ];
           text = "getInput 11 | kotlinc -script ${./day11.kts}";
         };
+        day12 = pkgs.writeShellApplication {
+          name = "day12";
+          runtimeInputs = [ pkgs.lua getInput ];
+          text = "getInput 12 | lua ${./day12.lua}";
+        };
       };
     };
 }
