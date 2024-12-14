@@ -56,6 +56,8 @@ local function solve(input, part2)
 
                     if not part2 or (not visited_sides[s1] and not visited_sides[s2]) then
                         perimeter = perimeter + 1
+                    elseif visited_sides[s1] and visited_sides[s2] then
+                        perimeter = perimeter - 1
                     end
 
                     if other ~= nil then
@@ -85,5 +87,5 @@ function part2(input)
 end
 
 local input = get_input()
-print("Part 1: ", part1(input))
-print("Part 2: ", part2(input))
+print("Part 1:", part1(input))
+print("Part 2:", part2(input))
