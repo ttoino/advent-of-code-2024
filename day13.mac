@@ -1,0 +1,52 @@
+load("stringproc") $
+load("simplex") $
+
+defstruct(machine(a, b, prize)) $
+
+getinput() := (
+    result : [],
+    going : "",
+    while going = "" do (
+        a : readline(?\*standard\-input\*),
+        b : readline(?\*standard\-input\*),
+        prize : readline(?\*standard\-input\*),
+        going : readline(?\*standard\-input\*),
+
+        a : maplist(parse_string, split(sremove("Button A: X+", sremove(" Y+", a)), ",")),
+        b : maplist(parse_string, split(sremove("Button B: X+", sremove(" Y+", b)), ",")),
+        prize : maplist(parse_string, split(sremove("Prize: X=", sremove(" Y=", prize)), ",")),
+
+        result : cons(new(machine(a, b, prize)), result)
+    ),
+    result 
+) $
+
+bnb(obj, cond, pos) := (
+    r : minimize_lp(obj, cond, pos),
+    if stringp(r) or integerp(r[1]) then r else (
+        if integerp(rhs(r[2][1])) then 
+            bnb(obj, cons(lhs(r[2][2]) >= ceiling(rhs(r[2][2])), cond), pos)
+        else
+            bnb(obj, cons(lhs(r[2][1]) >= ceiling(rhs(r[2][1])), cond), pos)
+    )
+) $
+
+part1(input) := lreduce("+",
+    maplist(lambda([m], (
+        r : bnb(3 * x + y, [m@a[1] * x + m@b[1] * y = m@prize[1], m@a[2] * x + m@b[2] * y = m@prize[2]], all),
+        if stringp(r) then 0 else r[1]
+    )), input)
+) $
+
+part2(input) := lreduce("+",
+    maplist(lambda([m], (
+        r : bnb(3 * x + y, [m@a[1] * x + m@b[1] * y = m@prize[1] + 10000000000000, m@a[2] * x + m@b[2] * y = m@prize[2] + 10000000000000], all),
+        if stringp(r) then 0 else r[1]
+    )), input)
+) $
+
+main() := (
+    input : getinput(),
+    print("Part 1:", part1(input)),
+    print("Part 2:", part2(input))
+) $

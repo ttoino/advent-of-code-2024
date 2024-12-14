@@ -106,6 +106,11 @@
           runtimeInputs = [ pkgs.lua getInput ];
           text = "getInput 12 | lua ${./day12.lua}";
         };
+        day13 = pkgs.writeShellApplication {
+          name = "day13";
+          runtimeInputs = [ pkgs.maxima getInput ];
+          text = "getInput 13 | maxima --very-quiet --init-mac=${./day13.mac} --batch-string='main()$'";
+        };
       };
     };
 }
