@@ -111,6 +111,11 @@
           runtimeInputs = [ pkgs.maxima getInput ];
           text = "getInput 13 | maxima --very-quiet --init-mac=${./day13.mac} --batch-string='main()$'";
         };
+        day14 = pkgs.writeShellApplication {
+          name = "day14";
+          runtimeInputs = [ getInput ];
+          text = "nix eval --show-trace --raw --file ${./day14.nix} --apply \"f: f ''$(getInput 14)''\"";
+        };
       };
     };
 }
