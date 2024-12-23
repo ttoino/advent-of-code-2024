@@ -116,6 +116,11 @@
           runtimeInputs = [ getInput ];
           text = "nix eval --show-trace --raw --file ${./day14.nix} --apply \"f: f ''$(getInput 14)''\"";
         };
+        day15 = pkgs.writeShellApplication {
+          name = "day15";
+          runtimeInputs = [ pkgs.ocaml getInput ];
+          text = "getInput 15 | ocaml ${./day15.ml}";
+        };
       };
     };
 }
