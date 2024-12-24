@@ -121,6 +121,11 @@
           runtimeInputs = [ pkgs.ocaml getInput ];
           text = "getInput 15 | ocaml ${./day15.ml}";
         };
+        day16 = pkgs.writeShellApplication {
+          name = "day16";
+          runtimeInputs = [ pkgs.swi-prolog getInput ];
+          text = "getInput 16 | swipl -g main ${./day16.pl}";
+        };
       };
     };
 }
