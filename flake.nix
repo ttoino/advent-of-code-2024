@@ -65,15 +65,19 @@
         };
         day06 = pkgs.writeShellApplication {
           name = "day06";
-          runtimeInputs = [ getInput (
-            pkgs.runCommand "day06Bin" {
-                nativeBuildInputs = [ pkgs.gfortran ];
-            } ''
-              n="$out/bin/day06Bin"
-              mkdir -p $(dirname $n)
-              gfortran -fimplicit-none -fcheck=all -ffree-line-length-512 ${./day06.f90} -o "$n"
-            ''
-          ) ];
+          runtimeInputs = [
+            (
+              pkgs.runCommand "day06Bin"
+                {
+                  nativeBuildInputs = [ pkgs.gfortran ];
+                } ''
+                n="$out/bin/day06Bin"
+                mkdir -p $(dirname $n)
+                gfortran -fimplicit-none -fcheck=all -ffree-line-length-512 ${./day06.f90} -o "$n"
+              ''
+            )
+            getInput
+          ];
           text = "getInput 6 | day06Bin";
         };
         day07 = pkgs.writeShellApplication {
@@ -125,6 +129,23 @@
           name = "day16";
           runtimeInputs = [ pkgs.swi-prolog getInput ];
           text = "getInput 16 | swipl -g main ${./day16.pl}";
+        };
+        day17 = pkgs.writeShellApplication {
+          name = "day17";
+          runtimeInputs = [
+            (
+              pkgs.runCommandCC "day17Bin"
+                {
+                  nativeBuildInputs = [ pkgs.rustc ];
+                } ''
+                n="$out/bin/day17Bin"
+                mkdir -p $(dirname $n)
+                rustc ${./day17.rs} -o "$n"
+              ''
+            )
+            getInput
+          ];
+          text = "getInput 17 | day17Bin";
         };
       };
     };
