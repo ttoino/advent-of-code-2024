@@ -1,19 +1,18 @@
 use std::io;
-use std::sync::mpsc;
-use std::thread;
+use std::collections::HashSet;
 
-#[derive(Default, Clone)]
+#[derive(Debug, Default, Clone, Eq, Hash, PartialEq)]
 struct State {
     register_a: usize,
     register_b: usize,
     register_c: usize,
 
     instruction_pointer: usize,
-    program: Vec<usize>,
-    output: Vec<usize>,
 }
 
-fn get_input() -> State {
+type Program = Vec<usize>;
+
+fn get_input() -> (State, Program) {
     let mut result = State::default();
 
     let mut buffer = String::new();
@@ -32,11 +31,13 @@ fn get_input() -> State {
 
     io::stdin().read_line(&mut buffer).unwrap();
     io::stdin().read_line(&mut buffer).unwrap();
-    result.program = buffer.trim().split(' ').last().unwrap()
+    let program: Program = buffer.trim().split(' ').last().unwrap()
         .split(',').map(|n| n.parse::<usize>().unwrap())
-        .collect(); 
+        .collect();
 
-    result
+    result.register_a = 190384625499151;
+
+    (result, program)
 }
 
 impl State {
@@ -50,10 +51,12 @@ impl State {
         }
     }
 
-    fn solve(self: &mut State) {
-        while self.instruction_pointer < self.program.len() {
-            let operation = self.program[self.instruction_pointer];
-            let operand = self.program[self.instruction_pointer + 1];
+    fn solve(self: &mut State, program: &Program) -> Vec<usize> {
+        let mut output = Vec::<usize>::new();
+
+        while self.instruction_pointer < program.len() {
+            let operation = program[self.instruction_pointer];
+            let operand = program[self.instruction_pointer + 1];
 
             match operation {
                 0 => { // adv
@@ -73,7 +76,7 @@ impl State {
                     self.register_b ^= self.register_c;
                 },
                 5 => { // out
-                    self.output.push(self.combo(operand) % 8);
+                    output.push(self.combo(operand) % 8);
                 },
                 6 => { // bdv
                     self.register_b = self.register_a / (1 << self.combo(operand));
@@ -85,49 +88,57 @@ impl State {
             };
             self.instruction_pointer += 2;
         };
+
+        output
     }
 }
 
-fn part1(state: &mut State) -> String {
-    state.solve();
-    state.output.iter().map(usize::to_string).reduce(|a, s| format!("{a},{s}")).unwrap()
+fn part1(state: State, program: &Program) -> String {
+    let mut state = state;
+    let output = state.solve(&program);
+    output.iter().map(usize::to_string).reduce(|a, s| format!("{a},{s}")).unwrap()
 }
 
-fn part2(state: &mut State) -> usize {
-    let (_tx, rx) = mpsc::channel();
-    let count = thread::available_parallelism().unwrap().into();
+fn part2_iter(original_state: State, program: &Program, result: &mut usize, cache: &mut HashSet<(usize, usize)>, current_a: usize, depth: usize) {
+    if !cache.insert((current_a, depth)) {
+        return;
+    }
 
-    for t in 0..count {
-        let mut state = state.clone();
-        let tx = _tx.clone();
+    for b in 0..=0b1111111111111 {
+        let mut state = original_state.clone();
+        let a = (current_a % (1 << (3 * depth))) ^ (b << (3 * depth));
+        state.register_a = a;
 
-        thread::spawn(move || {
-            for i in (t..).step_by(count) {
-                state.register_a = i;
-                state.register_b = 0;
-                state.register_c = 0;
-                state.instruction_pointer = 0;
-                state.output.clear();
+        let output = state.solve(&program);
 
-                state.solve();
+        if output.len() > program.len() {
+            continue;
+        }
 
-                if state.program.len() == state.output.len() 
-                && state.program.iter().zip(state.output.iter()).all(|(a, b)| a == b) {
-                    tx.send(i).unwrap();
-                    return;
-                }
+        if output.len() == program.len() && output.iter().zip(program.iter()).all(|(a, b)| a == b) {
+            if a < *result {
+                *result = a;
+                println!("Found new result: {a}");
             }
-        });
-    }
+        }
 
-    rx.recv().unwrap()
+        if output.len() > depth && output.iter().take(depth + 1).zip(program.iter()).all(|(a, b)| a == b) {
+            part2_iter(original_state.clone(), &program, result, cache, a, depth + 1);
+        }
+    }
+}
+
+fn part2(state: State, program: &Program) -> usize {
+    let mut result: usize = usize::MAX;
+    part2_iter(state.clone(), program, &mut result, &mut HashSet::new(), 0, 0);
+    result
 }
 
 fn main() {
-    let mut input = get_input();
+    let (state, program) = get_input();
 
-    let result1 = part1(&mut input);
+    let result1 = part1(state.clone(), &program);
     println!("Part 1: {result1}");
-    let result2 = part2(&mut input);
+    let result2 = part2(state.clone(), &program);
     println!("Part 2: {result2}");
 }
