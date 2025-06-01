@@ -147,6 +147,16 @@
           ];
           text = "getInput 17 | day17Bin";
         };
+        day18 = pkgs.writeShellApplication {
+          name = "day18";
+          runtimeInputs = [
+            pkgs.scala-cli
+            getInput
+          ];
+          text = ''
+            getInput 18 | scala-cli run ${./day18.scala}
+          '';
+        };
       };
     };
 }
