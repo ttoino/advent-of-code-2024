@@ -157,6 +157,11 @@
             getInput 18 | scala-cli run ${./day18.scala}
           '';
         };
+        day19 = pkgs.writeShellApplication {
+          name = "day19";
+          runtimeInputs = [ pkgs.deno getInput ];
+          text = "getInput 19 | deno run ${./day19.ts}";
+        };
       };
     };
 }
